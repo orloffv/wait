@@ -1,6 +1,5 @@
-(function () {
-
-    var root = this;
+(function(root) {
+    var wait = {};
 
     var toString = Object.prototype.toString;
 
@@ -63,7 +62,7 @@
         }
     };
 
-    root.wait = function(time, callback, id) {
+    wait.wait = function(time, callback, id) {
         var timeout = 0;
 
         time = isNumber(time) ? time : parseTime(time);
@@ -74,7 +73,7 @@
         return timeout;
     };
 
-    root.repeat = function(time, callback, id, callBefore) {
+    wait.repeat = function(time, callback, id, callBefore) {
         var interval = 0;
 
         time = isNumber(time) ? time : parseTime(time);
@@ -93,7 +92,7 @@
         return interval;
     };
 
-    root.until = function(condition, callback, time, id) {
+    wait.until = function(condition, callback, time, id) {
         if (condition()) {
             callback();
             return;
@@ -114,9 +113,9 @@
             time = 100;
         }
 
-        var interval = root.repeat(time, function() {
+        var interval = wait.repeat(time, function() {
             if (condition()) {
-                root.clear(interval);
+                wait.clear(interval);
                 callback();
             }
         }, id, false);
@@ -129,7 +128,7 @@
         clearTimeout(id);
     };
 
-    root.clear = function(id) {
+    wait.clear = function(id) {
         var _ids = [],
             _id = '';
 
@@ -155,4 +154,11 @@
         }
     };
 
-})();
+    if (typeof exports !== 'undefined') {
+        exports.wait = wait;
+    } else {
+        root.wait = wait;
+    }
+})(this);
+
+
